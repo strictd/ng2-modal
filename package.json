@@ -1,6 +1,6 @@
 {
-  "name": "ng2-modal",
-  "version": "0.0.21",
+  "name": "@strictd/ng2-modal",
+  "version": "0.0.24",
   "description": "Open modal window (dialog box) for your angular2 applications using bootstrap3.",
   "license": "MIT",
   "readmeFilename": "README.md",
@@ -11,10 +11,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pleerock/ng2-modal.git"
+    "url": "https://github.com/strictd/ng2-modal.git"
   },
   "bugs": {
-    "url": "https://github.com/pleerock/ng2-modal/issues"
+    "url": "https://github.com/strictd/ng2-modal/issues"
   },
   "tags": [
     "modal",

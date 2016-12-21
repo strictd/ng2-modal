@@ -15,15 +15,15 @@ import {Router, ActivatedRoute} from "@angular/router";
      (click)="closeOnOutsideClick ? close() : 0">
     <div [class]="'modal-dialog ' + modalClass" (click)="preventClosing($event)">
         <div class="modal-content" tabindex="0" *ngIf="isOpened">
-            <div class="modal-header">
+            <div class="modal-header" *ngIf="showHeader">
                 <button *ngIf="!hideCloseButton" type="button" class="close" data-dismiss="modal" [attr.aria-label]="cancelButtonLabel || 'Close'" (click)="close()"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" *ngIf="title">{{ title }}</h4>
                 <ng-content select="modal-header"></ng-content>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" *ngIf="showBody">
                 <ng-content select="modal-content"></ng-content>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" *ngIf="showFooter">
                 <ng-content select="modal-footer"></ng-content>
                 <button *ngIf="cancelButtonLabel" type="button" class="btn btn-default" data-dismiss="modal" (click)="close()">{{ cancelButtonLabel }}</button>
                 <button *ngIf="submitButtonLabel" type="button" class="btn btn-primary" (click)="onSubmit.emit(undefined)">{{ submitButtonLabel }}</button>
@@ -65,6 +65,15 @@ export class RouteModal implements OnInit, OnDestroy {
 
     @Input()
     submitButtonLabel: string;
+
+    @Input()
+    showHeader = true;
+
+    @Input()
+    showBody = true;
+
+    @Input()
+    showFooter = true;
 
     // -------------------------------------------------------------------------
     // Outputs
@@ -122,10 +131,10 @@ export class RouteModal implements OnInit, OnDestroy {
             return;
         
         this.isOpened = true;
-        this.onOpen.emit(args);
         document.body.appendChild(this.backdropElement);
         window.setTimeout(() => this.modalRoot.nativeElement.focus(), 0);
         document.body.className += " modal-open";
+        this.onOpen.emit(args);        
     }
 
     close(...args: any[]) {
@@ -133,9 +142,9 @@ export class RouteModal implements OnInit, OnDestroy {
             return;
 
         this.isOpened = false;
-        this.onClose.emit(args);
         document.body.className = document.body.className.replace(/modal-open\b/, "");
-
+        this.onClose.emit(args);
+        
         if (this.cancelUrl) {
             let navigationExtras: NavigationExtras = { relativeTo: this.activatedRoute };
             if (this.cancelUrlExtras) {
