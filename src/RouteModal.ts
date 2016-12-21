@@ -40,31 +40,31 @@ export class RouteModal implements OnInit, OnDestroy {
     // -------------------------------------------------------------------------
 
     @Input()
-    cancelUrl: any[];
+    public cancelUrl: any[];
 
     @Input()
-    cancelUrlExtras: NavigationExtras;
+    public cancelUrlExtras: { relative: boolean } & NavigationExtras;
 
     @Input()
-    modalClass: string;
+    public modalClass: string;
 
     @Input()
-    closeOnEscape: boolean = true;
+    public closeOnEscape: boolean = true;
 
     @Input()
-    closeOnOutsideClick: boolean = true;
+    public closeOnOutsideClick: boolean = true;
 
     @Input()
-    title: string;
+    public title: string;
 
     @Input()
-    hideCloseButton = false;
+    public hideCloseButton = false;
 
     @Input()
-    cancelButtonLabel: string;
+    public cancelButtonLabel: string;
 
     @Input()
-    submitButtonLabel: string;
+    public submitButtonLabel: string;
 
     @Input()
     showHeader = true;
@@ -80,22 +80,22 @@ export class RouteModal implements OnInit, OnDestroy {
     // -------------------------------------------------------------------------
 
     @Output()
-    onOpen = new EventEmitter(false);
+    public onOpen = new EventEmitter(false);
 
     @Output()
-    onClose = new EventEmitter(false);
+    public onClose = new EventEmitter(false);
 
     @Output()
-    onSubmit = new EventEmitter(false);
+    public onSubmit = new EventEmitter(false);
 
     // -------------------------------------------------------------------------
     // Private properties
     // -------------------------------------------------------------------------
 
     @ViewChild("modalRoot")
-    private modalRoot: ElementRef;
+    public modalRoot: ElementRef;
 
-    private isOpened = false;
+    public isOpened = false;
 
     private backdropElement: HTMLElement;
 
@@ -146,11 +146,15 @@ export class RouteModal implements OnInit, OnDestroy {
         this.onClose.emit(args);
         
         if (this.cancelUrl) {
-            let navigationExtras: NavigationExtras = { relativeTo: this.activatedRoute };
+            let navigationExtras: NavigationExtras = { };
             if (this.cancelUrlExtras) {
-                navigationExtras = Object.assign(this.cancelUrlExtras);
+                if (this.cancelUrlExtras.relative) {
+                    navigationExtras.relativeTo = this.activatedRoute;
+                }
+                navigationExtras = (Object as any).assign(navigationExtras, this.cancelUrlExtras);
             }
             this.router.navigate(this.cancelUrl, navigationExtras);
+
         } else {
             window.history.back();
         }
@@ -160,7 +164,7 @@ export class RouteModal implements OnInit, OnDestroy {
     // Private Methods
     // -------------------------------------------------------------------------
 
-    private preventClosing(event: MouseEvent) {
+    public preventClosing(event: MouseEvent) {
         event.stopPropagation();
     }
 
